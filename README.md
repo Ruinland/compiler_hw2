@@ -2,7 +2,22 @@
 #### (Posted on 03/28, Due 04/11 9:59PM)
 
                     
-In this assignment, you are required to write a C-- scanner (The language C-- has been posted on the class website) using the Lex/Flex tool. You are also required to use basic symbol table manipulation routines (lookup(), insertID() and printSymTab()) provided to handle all identifiers. Tokens to be scanned by your scanner are all valid symbols that you would expect to see in a C-- program. There are five classes of tokens to handle: operators, separators, identifiers, reserved words and constants (See the C-- specification for the 5 classes of tokens). Comments are considered as white spaces, and should be stripped off. However, in this assignment, you should define comments as a token. The rules for token definitions can be derived from the description of the C-- language. Although your scanner should be designed to work with your parser (as in assignment#3), in this assignment, your scanner only needs to handle the following jobs:
+In this assignment, you are required to write a C-- scanner (The language C-- has been posted on the class website) using the Lex/Flex tool.  
+You are also required to use basic symbol table manipulation routines (lookup(), insertID() and printSymTab()) provided to handle all identifiers.  
+Tokens to be scanned by your scanner are all valid symbols that you would expect to see in a C-- program.  
+There are five classes of tokens to handle: 
+    1. operators, 
+    2. separators, 
+    3. identifiers, 
+    4. reserved words and 
+    5. constants 
+
+> (See the C-- specification for the 5 classes of tokens).  
+
+Comments are considered as white spaces, and should be stripped off.  
+However, in this assignment, you should define comments as a token.  
+The rules for token definitions can be derived from the description of the C-- language.  
+Although your scanner should be designed to work with your parser (as in assignment#3), in this assignment, your scanner only needs to handle the following jobs:
 
 a) Print each comment captured by your token RE (regular expression).  
 b) Print the frequency of each identifier
@@ -36,7 +51,7 @@ write(def); /* 3: this is /* the end ***/
 
 The output from your scanner looks like the following:
 
-```c
+```
 /* 1: this is * just a / sample */
 /* 2: this is a 3-line
     comment
@@ -44,13 +59,13 @@ The output from your scanner looks like the following:
 /* 3: this is /* the end ***/
 
 Frequency of identifiers:
-a1      1
-abc     4
-b1      1
-def     3
+a1          1
+abc         4
+b1          1
+def         3
 main        1
 main_1      1
-n       3
+n           3
 read        1
 write       2
 z_123_x_45  1
@@ -63,12 +78,15 @@ z_123_x_45  1
 1. It is required that the outputs be sorted. You could simply use the strcmp library function to do the sorting. In this assignment, the entire " (double quote) delimited string is treated as a single token i.e. a string constant. In the case of some unknown tokens, your scanner should issue an error message, and print out the unrecognized token, then exit.
 2. You may assume the identifier names will not exceed 256 characters. However, the number of distinct identifiers should not be limited.
 3. In the hw2  directory you may find the following files:
-    + src/lexer.l           the lex template code that you may start with
-    + src/symboltable.c     contains symbol table manipulation routines
-    + src/header.h          contains a sample symbol table structure
-    + src/Makefile
-    + test/                 a test directory containing some sample tests
-    + tar.sh                package script
+
+```
+    src/lexer.l           the lex template code that you may start with
+    src/symboltable.c     contains symbol table manipulation routines
+    src/header.h          contains a sample symbol table structure
+    src/Makefile
+    test/                 a test directory containing some sample tests
+    tar.sh                package script
+```
 
 ---
 
