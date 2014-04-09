@@ -7,6 +7,7 @@ symtab * lookup();
 symtab * ptr;
 void     insertID();
 void 	 printSymTab();
+int i;
 /* You need to define for all tokens in C--, here are some examples */
 #define INT		10
 #define FLOAT 		11 
@@ -24,13 +25,21 @@ ID	 {letter}({letter}|{digit}|"_")*
 WS	 [ \t]+
 Int_constant {digit}+
 
-/* You need to define the following RE's 
-Float_constant
-String_constant
-comment
-*/
+Flp  {digit}*\.{digit}+    
+Exp  ([eE][+-]?{digit}+) 
 
+
+/* You need to define the following RE's */
+
+Float_constant  (({Flp}{Exp}?)|{digit}+{Exp})
+String_constant  "\""([^"\\]|\\.)*"\""
+Comment          ("/*"([^*]|[\r\n]|("*"([^*/]|[\r\n])))*"*"+"/")|("//".*)
+
+OP_mul           "*" 
 OP_assign        "="
+OP_add           "+"
+OP_sub           "-"
+OP_div           "/" 
 OP_or   "||"
 
 /* Other operators appear here */ 
@@ -48,31 +57,58 @@ DL_dot  "."
 
 /* Other separators appear here */
 
+
 error    .
 
 %%
 
-{WS}            {}
-{RWInt}         {/* return INT; */ }
-{RWFloat}       {/* return FLOAT; */}
-{ID}            { 
-			ptr = lookup(yytext);
-			if (ptr == NULL)
-			     insertID(yytext);	
-			else 
-			     ptr->counter++;
-		}
 
-{OP_assign}     /* return OP_ASSIGN; */ 
-{OP_or}         /* return OP_OR; */
-{DL_lparen}     /* return MK_LPAREN; */
-{DL_rparen}     /* return MK_RPAREN; */
-{DL_lbrace}     /* return MK_LBRACE; */
-{DL_rbrace}     /* return MK_RBRACE; */
+{Int_constant}  {}
+
+{Float_constant}  {}
+
+
+{String_constant} {}
+
+{Comment}       {  printf("%s\n", yytext);
+                   for(i=0; yytext[i]!='\0'; i++ )
+                      if(yytext[i] == '\n')
+                          linenumber +=1;
+                }  
+{WS}            {}
+{ID}            { 
+                 if( strcmp(yytext,"return") && strcmp(yytext,"typedef") &&
+                        strcmp(yytext,"if") && 
+                        strcmp(yytext,"else") && 
+                        strcmp(yytext,"int")  &&
+                        strcmp(yytext,"float")  && 
+                        strcmp(yytext,"for")  &&
+                        strcmp(yytext,"struct") && 
+                        strcmp(yytext,"union")  &&
+                        strcmp(yytext,"while")
+                ){  
+			     ptr = lookup(yytext);
+			     if (ptr == NULL)
+			       insertID(yytext);	
+			     else 
+			       ptr->counter++;
+                 }
+		        }
+{OP_assign}     {} 
+{OP_add}        {}
+{OP_sub}        {}  
+{OP_mul}        {} 
+{OP_div}        {}   
+{OP_or}         {}  /* return OP_OR; */
+{DL_lparen}     {} /* return MK_LPAREN; */
+{DL_rparen}     {} /* return MK_RPAREN; */
+{DL_lbrace}     {} /* return MK_LBRACE; */
+{DL_rbrace}     {}   /* return MK_RBRACE; */
 {DL_comma}      {}
 {DL_semicol}    {}
-{newline}       linenumber += 1;
-{error}         printf("ERR \n");/* return ERROR; */
+{newline}       { linenumber += 1;}
+{DL_dot}        {}
+{error}         { printf("ERR at line %d , which is %s.\n Exiting...", linenumber+1, yytext); exit(1); }  /* return ERROR; */
 
 
 %%
